@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  api:
+    image: myacr.azurecr.io/api:v1
+    ports:
+      - "8080:80"
+  spa:
+    image: myacr.azurecr.io/spa:v1
+    ports:
+      - "8081:80"

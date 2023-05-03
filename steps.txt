@@ -1,0 +1,64 @@
+Pseudocode:
+
+Install Azure CLI
+Login to Azure account
+Create a resource group
+Create AKS instance
+Get credentials for AKS instance
+Install kubectl
+Clone ms-identity-javascript-angular-tutorial repository
+Change directory to API folder
+Build Docker image for API
+Push Docker image to Azure Container Registry
+Deploy API to AKS
+Change directory to SPA folder
+Build Docker image for SPA
+Push Docker image to Azure Container Registry
+Deploy SPA to AKS
+
+# Install Azure CLI
+Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi
+
+# Login to Azure account
+az login
+
+# Create a resource group
+az group create --name myResourceGroup --location eastus
+
+# Create AKS instance
+az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 1 --enable-addons monitoring --generate-ssh-keys
+
+# Get credentials for AKS instance
+az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+
+# Install kubectl
+az aks install-cli
+
+# Clone ms-identity-javascript-angular-tutorial repository
+git clone https://github.com/Azure-Samples/ms-identity-javascript-angular-tutorial.git
+
+# Change directory to API folder
+cd ms-identity-javascript-angular-tutorial\5-AccessControl\1-call-api-roles\API
+
+# Build Docker image for API
+docker build -t myacr.azurecr.io/api:v1 .
+
+# Push Docker image to Azure Container Registry
+az acr login --name myacr
+docker push myacr.azurecr.io/api:v1
+
+# Deploy API to AKS
+kubectl apply -f deployment.yaml
+
+# Change directory to SPA folder
+cd ..\SPA
+
+# Build Docker image for SPA
+docker build -t myacr.azurecr.io/spa:v1 .
+
+# Push Docker image to Azure Container Registry
+az acr login --name myacr
+docker push myacr.azurecr.io/spa:v1
+
+# Deploy SPA to AKS
+kubectl apply -f deployment.yaml

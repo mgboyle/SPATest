@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spa-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spa
+  template:
+    metadata:
+      labels:
+        app: spa
+    spec:
+      containers:
+      - name: spa
+        image: myacr.azurecr.io/spa:v1
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spa-service
+spec:
+  selector:
+    app: spa
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
